@@ -30,7 +30,7 @@ async function save(size, logoHeight, background, file) {
 await save(1024, 620, CREAM, 'icon.png')
 await sharp(out('icon.png')).flatten({ background: CREAM }).removeAlpha().toBuffer().then((b) => sharp(b).toFile(out('icon.png')))
 // Adaptive foreground: transparent, logo inside the centre 66% safe zone (676px).
-await save(1024, 540, null, 'adaptive-icon.png')
+await save(1024, 594, null, 'adaptive-icon.png')
 // Splash: the logo alone, tightly cropped (shown at about 200px wide).
 await sharp(await logo(696)).toFile(out('splash-icon.png'))
 
