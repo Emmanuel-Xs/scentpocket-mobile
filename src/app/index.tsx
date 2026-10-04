@@ -1,98 +1,100 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { api } from '@/api/client'
+import { catalogResponseSchema } from '@/api/schemas'
+import { useAuth } from '@/auth/AuthProvider'
+import { meQuery } from '@/auth/queries'
+import { Button } from '@/components/Button'
+import { Wordmark } from '@/components/Wordmark'
+import { colors, radius, shadow, space, type as t } from '@/theme'
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+/** M1 test screen: sign in, see /me, see the catalog arrive through the validated client. */
+export default function Home() {
+  const insets = useSafeAreaInsets()
+  const { status, signIn, signOut } = useAuth()
+  const [signingIn, setSigningIn] = useState(false)
+  const [signInError, setSignInError] = useState<string | null>(null)
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
+  const me = useQuery({ ...meQuery(), enabled: status === 'signedIn' })
+  const catalog = useQuery({
+    queryKey: ['catalog-check'],
+    queryFn: () => api('/catalog', catalogResponseSchema, { auth: false }),
+  })
+
+  const onSignIn = async () => {
+    setSigningIn(true)
+    setSignInError(null)
+    const result = await signIn()
+    setSigningIn(false)
+    if (!result.ok && result.reason === 'error') setSignInError(result.message)
   }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
+
   return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+    <ScrollView
+      contentContainerStyle={[styles.content, { paddingTop: insets.top + space.lg, paddingBottom: insets.bottom + space.xl }]}
+    >
+      <Wordmark />
+      <Text style={[t.h1, styles.title]}>A scent for every pocket.</Text>
 
-export default function HomeScreen() {
-  return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
+      <View style={styles.card}>
+        <Text style={t.eyebrow}>Catalog</Text>
+        {catalog.isPending ? (
+          <ActivityIndicator color={colors.ink} />
+        ) : catalog.isError ? (
+          <>
+            <Text style={[t.body, { color: colors.danger }]}>{catalog.error.message}</Text>
+            <Button label="Try again" variant="secondary" onPress={() => void catalog.refetch()} />
+          </>
+        ) : (
+          <Text style={t.body}>{catalog.data.total} scents loaded from the shop.</Text>
+        )}
+      </View>
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
-  );
+      {status === 'signedOut' ? (
+        <View style={styles.card}>
+          <Text style={t.h3}>Sign in to start your cart</Text>
+          <Text style={[t.small, { color: colors.muted }]}>
+            One cart for the app and the website.
+          </Text>
+          {signInError ? <Text style={[t.small, { color: colors.danger }]}>{signInError}</Text> : null}
+          <Button label="Continue with Google" onPress={() => void onSignIn()} loading={signingIn} />
+        </View>
+      ) : (
+        <View style={styles.card}>
+          <Text style={t.eyebrow}>Signed in</Text>
+          {me.isPending ? (
+            <ActivityIndicator color={colors.ink} />
+          ) : me.isError ? (
+            <>
+              <Text style={[t.body, { color: colors.danger }]}>{me.error.message}</Text>
+              <Button label="Try again" variant="secondary" onPress={() => void me.refetch()} />
+            </>
+          ) : (
+            <>
+              <Text style={t.h3}>{me.data.name ?? 'Welcome'}</Text>
+              <Text style={t.body}>{me.data.email}</Text>
+              <Text style={[t.small, { color: colors.muted }]}>Role: {me.data.role}</Text>
+            </>
+          )}
+          <Button label="Sign out" variant="secondary" onPress={() => void signOut()} />
+        </View>
+      )}
+    </ScrollView>
+  )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
+  content: { paddingHorizontal: space.lg, gap: space.lg },
+  title: { marginTop: space.sm },
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: space.lg,
+    gap: space.md,
+    ...shadow.sm,
   },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
-  },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
-  },
-  title: {
-    textAlign: 'center',
-  },
-  code: {
-    textTransform: 'uppercase',
-  },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
-  },
-});
+})

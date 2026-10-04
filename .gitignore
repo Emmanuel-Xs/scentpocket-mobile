@@ -41,3 +41,6 @@ example
 # generated native folders
 /ios
 /android
+
+# local env (public values, but keep them out of git; EAS has its own)
+.env

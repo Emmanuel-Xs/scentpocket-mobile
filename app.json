@@ -1,42 +1,43 @@
 {
   "expo": {
-    "name": "scentpocket-mobile",
+    "name": "Scentpocket",
     "slug": "scentpocket-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "scentpocketmobile",
-    "userInterfaceStyle": "automatic",
-    "ios": {
-      "icon": "./assets/expo.icon"
-    },
+    "icon": "./assets/icon.png",
+    "scheme": "scentpocket",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#FAF6EF",
     "android": {
+      "package": "ng.com.scentpocket",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FAF6EF"
       },
       "predictiveBackGestureEnabled": false
-    },
-    "web": {
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "backgroundColor": "#FAF6EF",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "d3279573-0003-4b9f-9f01-612a5cf04c11"
+      }
+    },
+    "owner": "n99plusones-team"
   }
 }
