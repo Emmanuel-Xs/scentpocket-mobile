@@ -10,7 +10,11 @@ import { colors, space, type as t } from '@/theme'
  * router (it can do that as well as to the browser session). It finishes sign in and goes back.
  */
 export default function AuthCallback() {
-  const { code, error_description: errorDescription, error } = useLocalSearchParams<{
+  const {
+    code,
+    error_description: errorDescription,
+    error,
+  } = useLocalSearchParams<{
     code?: string
     error_description?: string
     error?: string
@@ -19,7 +23,7 @@ export default function AuthCallback() {
 
   useEffect(() => {
     let cancelled = false
-    void completeSignIn({ code, error: errorDescription ?? error }).then((result) => {
+    void completeSignIn({ code, error: errorDescription ?? error }, 'route').then((result) => {
       if (cancelled) return
       if (result.ok) {
         if (router.canGoBack()) router.back()
@@ -52,6 +56,13 @@ export default function AuthCallback() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.cream, alignItems: 'center', justifyContent: 'center', padding: space.xl, gap: space.lg },
+  screen: {
+    flex: 1,
+    backgroundColor: colors.cream,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: space.xl,
+    gap: space.lg,
+  },
   center: { textAlign: 'center' },
 })
