@@ -1,4 +1,4 @@
-import { useIsMutating, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { router, useIsFocused } from 'expo-router'
 import { useState } from 'react'
 import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
@@ -14,7 +14,8 @@ import { formatKobo } from '@/lib/money'
 import { colors, radius, shadow, space, TOUCH, type as t } from '@/theme'
 import { CartLineRow } from './CartLineRow'
 import { FreeDeliveryProgress } from './FreeDeliveryProgress'
-import { cartQuery, MUTATION_KEY, useSetCartItem } from './queries'
+import { hasPendingCartEdits, setCartQuantity } from './editor'
+import { cartQuery } from './queries'
 
 /** How often the server cart is re-read while this tab is in front: how web edits show up here. */
 const POLL_MS = 3000
@@ -23,16 +24,14 @@ export function CartScreen() {
   const insets = useSafeAreaInsets()
   const { status } = useAuth()
   const focused = useIsFocused()
-  const saving = useIsMutating({ mutationKey: MUTATION_KEY }) > 0
-  const set = useSetCartItem()
   const [notice, setNotice] = useState<string | null>(null)
   const [actionError, setActionError] = useState<string | null>(null)
 
   const cart = useQuery({
     ...cartQuery(),
     enabled: status === 'signedIn',
-    // Not while a save is running: a refetch started before it would land after it and undo it.
-    refetchInterval: focused && !saving ? POLL_MS : false,
+    // Not while an edit is waiting or saving: a refetch started before it would land after it and undo it.
+    refetchInterval: () => (focused && !hasPendingCartEdits() ? POLL_MS : false),
   })
   const delivery = useQuery(deliveryZonesQuery())
 
@@ -94,9 +93,9 @@ export function CartScreen() {
   const { lines, subtotalKobo, itemCount } = cart.data
   const onQuantity = (variantId: string, quantity: number) => {
     setActionError(null)
-    set.mutate(
-      { variantId, quantity },
-      { onError: () => setActionError("We couldn't update your cart. Check your connection and try again.") },
+    // Instant on screen, one debounced request; if the server refuses, the cart snaps back and we say so.
+    setCartQuantity(variantId, quantity).catch(() =>
+      setActionError("We couldn't update your cart. Check your connection and try again."),
     )
   }
 
@@ -106,7 +105,7 @@ export function CartScreen() {
         contentContainerStyle={styles.pad}
         refreshControl={
           <RefreshControl
-            refreshing={cart.isRefetching && !saving}
+            refreshing={cart.isRefetching}
             onRefresh={() => void cart.refetch()}
             tintColor={colors.ink}
             colors={[colors.ink]}

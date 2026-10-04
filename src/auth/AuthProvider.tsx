@@ -99,8 +99,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const signOut = useCallback(async () => {
-    await supabase.auth.signOut()
+    // Optimistic: the app is signed out on the tap. Revoking the session on the server follows, and
+    // the session on this phone is dropped even if that request fails.
+    setState({ status: 'signedOut', session: null })
     queryClient.clear()
+    try {
+      const { error } = await supabase.auth.signOut()
+      // Offline, the global sign out leaves the session on the phone; drop it locally so a restart cannot bring it back.
+      if (error) await supabase.auth.signOut({ scope: 'local' })
+    } catch {
+      await supabase.auth.signOut({ scope: 'local' })
+    }
   }, [])
 
   const value = useMemo(() => ({ ...state, signIn, signOut }), [state, signIn, signOut])

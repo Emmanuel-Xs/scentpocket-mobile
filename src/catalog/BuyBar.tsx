@@ -34,14 +34,18 @@ export function BuyBar({ product, variant, qty }: Props) {
       setSheet(true)
       return
     }
-    setAdding(true)
     setError(null)
+    setAdding(true)
     try {
-      setAdded(await addToCart(variant.id, qty, variant.stock))
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'We could not add that. Please try again.')
-    } finally {
+      // The badge and the "Added" note appear at once; the save finishes in the background.
+      const { quantity, saved } = await addToCart(variant.id, qty, variant.stock)
+      setAdded(quantity)
       setAdding(false)
+      await saved
+    } catch (e) {
+      setAdded(null)
+      setAdding(false)
+      setError(e instanceof Error ? e.message : 'We could not add that. Please try again.')
     }
   }
 
