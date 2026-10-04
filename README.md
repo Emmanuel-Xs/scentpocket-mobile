@@ -12,7 +12,11 @@ It is a thin client over the live backend, the Scentpocket web app:
 
 ## Install (Android)
 
-**Preview APK:** _link added when the final build finishes_ (open it on your phone, allow "install unknown apps" for your browser if asked).
+**Preview APK:** https://expo.dev/artifacts/eas/wOoHoY1Q0d8q-cizpM4edt1COi6yf18LP1t4aOT11dY.apk
+
+Install page with a QR code: https://expo.dev/accounts/n99plusones-team/projects/scentpocket-mobile/builds/c3a564ae-0bd3-4510-9694-3b0f629a3934
+
+Open it on your phone and allow "install unknown apps" for your browser if asked.
 
 ## Stack
 
