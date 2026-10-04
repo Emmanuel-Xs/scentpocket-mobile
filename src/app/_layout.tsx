@@ -45,6 +45,7 @@ function Root() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="product/[slug]" />
         <Stack.Screen name="checkout" />
+        <Stack.Screen name="orders/[ref]" />
         <Stack.Screen name="auth/callback" />
       </Stack>
     </>
