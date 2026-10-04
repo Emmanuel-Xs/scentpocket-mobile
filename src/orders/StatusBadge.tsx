@@ -19,4 +19,6 @@ export function StatusBadge({ status }: { status: OrderStatus }) {
   )
 }
 
-const styles = StyleSheet.create({ badge: { alignSelf: 'flex-start', paddingHorizontal: 12, paddingVertical: 4, borderRadius: radius.pill } })
+const styles = StyleSheet.create({
+  badge: { alignSelf: 'flex-start', paddingHorizontal: 12, paddingVertical: 4, borderRadius: radius.pill },
+})

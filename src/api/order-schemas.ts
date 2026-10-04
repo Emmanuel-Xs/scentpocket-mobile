@@ -53,3 +53,16 @@ export const stockConflictDetailsSchema = z.object({
 export type OrderStatus = z.infer<typeof orderStatusSchema>
 export type Order = z.infer<typeof orderSchema>
 export type OrderItem = z.infer<typeof orderItemSchema>
+
+export const orderSummarySchema = z.object({
+  ref: z.string(),
+  status: orderStatusSchema,
+  totalKobo: z.number().int(),
+  createdAt: z.string(),
+  itemCount: z.number().int(),
+  imageUrls: z.array(z.string()),
+  images: z.array(imageSchema),
+})
+export const ordersResponseSchema = z.object({ orders: z.array(orderSummarySchema) })
+
+export type OrderSummary = z.infer<typeof orderSummarySchema>

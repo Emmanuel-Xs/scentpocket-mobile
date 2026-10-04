@@ -52,7 +52,12 @@ export function OrderDetailScreen({ orderRef, placed }: { orderRef: string; plac
       <View style={styles.screen}>
         <BackHeader title="Order" fallback={BACK} />
         {missing ? (
-          <EmptyState title="We could not find that order" body="Check the reference, or look in your orders." actionLabel="Back to the shop" onAction={() => router.replace('/')} />
+          <EmptyState
+            title="We could not find that order"
+            body="Check the reference, or look in your orders."
+            actionLabel="Back to the shop"
+            onAction={() => router.replace('/')}
+          />
         ) : (
           <ErrorState message={order.error.message} onRetry={() => void order.refetch()} />
         )}
@@ -67,7 +72,14 @@ export function OrderDetailScreen({ orderRef, placed }: { orderRef: string; plac
       <BackHeader title={placed ? undefined : 'Order'} fallback={BACK} />
       <ScrollView
         contentContainerStyle={styles.pad}
-        refreshControl={<RefreshControl refreshing={order.isRefetching} onRefresh={() => void order.refetch()} tintColor={colors.ink} colors={[colors.ink]} />}
+        refreshControl={
+          <RefreshControl
+            refreshing={order.isRefetching}
+            onRefresh={() => void order.refetch()}
+            tintColor={colors.ink}
+            colors={[colors.ink]}
+          />
+        }
       >
         {placed ? <ThankYou order={o} /> : null}
         <View style={{ gap: space.sm }}>
@@ -86,9 +98,13 @@ export function OrderDetailScreen({ orderRef, placed }: { orderRef: string; plac
                 <ProductImage image={item.image} aspectRatio={4 / 5} />
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={t.bodyStrong} numberOfLines={2}>{item.productName}</Text>
+                <Text style={t.bodyStrong} numberOfLines={2}>
+                  {item.productName}
+                </Text>
                 <Text style={[t.small, { color: colors.muted }]}>{item.variantLabel}</Text>
-                <Text style={[t.small, { color: colors.muted }]}>{item.qty} × {formatKobo(item.unitPriceKobo)}</Text>
+                <Text style={[t.small, { color: colors.muted }]}>
+                  {item.qty} × {formatKobo(item.unitPriceKobo)}
+                </Text>
               </View>
               <Text style={t.bodyStrong}>{formatKobo(item.lineTotalKobo)}</Text>
             </View>
@@ -97,7 +113,9 @@ export function OrderDetailScreen({ orderRef, placed }: { orderRef: string; plac
         <Card title="Delivery">
           <Text style={t.body}>{o.customerName}</Text>
           <Text style={t.body}>{o.phone}</Text>
-          <Text style={t.body}>{o.addressLine}, {o.city}, {o.state}</Text>
+          <Text style={t.body}>
+            {o.addressLine}, {o.city}, {o.state}
+          </Text>
           {zoneLabel ? <Text style={[t.small, { color: colors.muted }]}>{zoneLabel}</Text> : null}
         </Card>
         <Card title="Payment">
@@ -142,8 +160,22 @@ function Row({ label, value, strong }: { label: string; value: string; strong?: 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.cream },
   pad: { padding: space.lg, gap: space.lg, paddingBottom: space.xxl },
-  thanks: { gap: 4, padding: space.lg, borderRadius: radius.lg, backgroundColor: 'rgba(47, 107, 79, 0.1)', borderWidth: 1, borderColor: 'rgba(47, 107, 79, 0.3)' },
-  card: { gap: space.sm, padding: space.lg, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface },
+  thanks: {
+    gap: 4,
+    padding: space.lg,
+    borderRadius: radius.lg,
+    backgroundColor: 'rgba(47, 107, 79, 0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(47, 107, 79, 0.3)',
+  },
+  card: {
+    gap: space.sm,
+    padding: space.lg,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
   item: { flexDirection: 'row', alignItems: 'center', gap: space.md, paddingVertical: space.xs },
   photo: { width: 56, borderRadius: radius.sm, borderWidth: 1, borderColor: colors.border, overflow: 'hidden' },
   row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' },

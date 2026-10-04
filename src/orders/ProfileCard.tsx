@@ -38,8 +38,12 @@ export function ProfileCard() {
             </View>
           )}
           <View style={{ flex: 1 }}>
-            <Text style={t.h3} numberOfLines={1}>{me.data.name ?? 'Your account'}</Text>
-            <Text style={[t.small, { color: colors.muted }]} numberOfLines={1}>{me.data.email}</Text>
+            <Text style={t.h3} numberOfLines={1}>
+              {me.data.name ?? 'Your account'}
+            </Text>
+            <Text style={[t.small, { color: colors.muted }]} numberOfLines={1}>
+              {me.data.email}
+            </Text>
           </View>
         </View>
       )}
@@ -49,7 +53,15 @@ export function ProfileCard() {
 }
 
 const styles = StyleSheet.create({
-  card: { backgroundColor: colors.surface, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, padding: space.lg, gap: space.lg, ...shadow.sm },
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: space.lg,
+    gap: space.lg,
+    ...shadow.sm,
+  },
   row: { flexDirection: 'row', alignItems: 'center', gap: space.md },
   avatar: { width: 52, height: 52, borderRadius: 26 },
   initials: { backgroundColor: colors.designer, alignItems: 'center', justifyContent: 'center' },
