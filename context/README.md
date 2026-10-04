@@ -5,7 +5,7 @@
 | | |
 |---|---|
 | Deadline | **Mon 5 Oct 2026, 11:59 PM WAT** |
-| Current phase | **M3 release: done except the phone test of the final build** (was: M2 in progress (sign in works on the phone; Shop, Product, Dupes, Cart, Checkout and Order detail built; next: Orders list M2.7, then the polish pass M2.8) |
+| Current phase | **M3 release done** (all screens built, final preview APK built, repo pushed). Left: the owner's phone test of the final build |
 | Last updated | Sun 4 Oct 2026, by Claude Code |
 | Backend | https://scentpocket.com.ng/api/v1 ([docs/API.md](../docs/API.md)) |
 | Web repo | https://github.com/Emmanuel-Xs/scentpocket |
@@ -35,7 +35,7 @@ Status legend: [ ] not started · [x] done
 ## Phase M3: release
 - [x] M3.1 Preview APK built (build c3a564ae, 4 Oct)
 - [x] M3.2 README written, APK link added
-- [ ] M3.3 GitHub repo `Emmanuel-Xs/scentpocket-mobile` created and pushed
+- [x] M3.3 GitHub repo `Emmanuel-Xs/scentpocket-mobile` created and pushed (public)
 
 ## Parked / open
 * Supabase redirect URLs allowed for mobile: `scentpocket://auth/callback`, `exp+scentpocket://**` (already pushed on the live project). If Google sign in returns to the wrong place, check what `Linking.createURL("auth/callback")` returns in the dev client.
