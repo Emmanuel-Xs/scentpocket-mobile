@@ -5,7 +5,7 @@
 | | |
 |---|---|
 | Deadline | **Mon 5 Oct 2026, 11:59 PM WAT** |
-| Current phase | **M1: auth + first build** (code done; waiting for the user to approve the generated images before the first EAS build) |
+| Current phase | **M1 build running; M2 in progress** (Shop, Product, Dupes written and typechecked, not yet tried on a device) |
 | Last updated | Sun 4 Oct 2026, by Claude Code |
 | Backend | https://scentpocket.com.ng/api/v1 ([docs/API.md](../docs/API.md)) |
 | Web repo | https://github.com/Emmanuel-Xs/scentpocket |
@@ -19,14 +19,14 @@ Status legend: [ ] not started · [x] done
 - [x] M1.3 `src/theme.ts` from the web tokens; Instrument Serif + Sans
 - [x] M1.4 Supabase client (AsyncStorage, pkce), Google sign in via `WebBrowser.openAuthSessionAsync`, `/me` right after sign in
 - [x] M1.5 API client: bearer token, refresh once on 401, Zod-validated responses
-- [ ] M1.6 Development APK built and install link given to the user (needs approval of the images first)
+- [~] M1.6 Development APK: build queued 4 Oct (https://expo.dev/accounts/n99plusones-team/projects/scentpocket-mobile/builds/abdc2875-a9e7-49fa-9097-4cf64e3f340a), install link when it finishes
 - [ ] M1.7 User tested sign in on the phone
 
 ## Phase M2: screens
-- [ ] M2.1 Tabs (Shop, Dupes, Cart with badge, Orders with profile card); signed out prompts on Cart and Orders
-- [ ] M2.2 Shop: tier pills, search, 2-column grid, pull to refresh
-- [ ] M2.3 Product: gallery, size radios (sold out struck), stepper capped at stock, add to cart (sign in required), dupe callout
-- [ ] M2.4 Dupes: pair cards linking both products
+- [~] M2.1 Tabs (Shop, Dupes, Cart with badge, Orders with profile card); signed out prompts on Cart and Orders. Tabs, badge, prompts and profile card done; Cart and Orders bodies are placeholders until M2.5 and M2.7
+- [x] M2.2 Shop: tier pills, search, 2-column grid, pull to refresh
+- [x] M2.3 Product: gallery, size radios (sold out struck), stepper capped at stock, add to cart (sign in required), dupe callout
+- [x] M2.4 Dupes: pair cards linking both products
 - [ ] M2.5 Cart: server cart only, optimistic `setCartItem`, refetch on app focus, poll 3s while the Cart tab is focused, free delivery progress, subtotal
 - [ ] M2.6 Checkout: contact (email from /me, +234 phone), zones, pay on delivery, Idempotency-Key, 409 handling (show `details.short`, refetch the cart)
 - [ ] M2.7 Orders list and order detail with status timeline
@@ -39,9 +39,13 @@ Status legend: [ ] not started · [x] done
 
 ## Parked / open
 * Supabase redirect URLs allowed for mobile: `scentpocket://auth/callback`, `exp+scentpocket://**` (already pushed on the live project). If Google sign in returns to the wrong place, check what `Linking.createURL("auth/callback")` returns in the dev client.
-* `expo-dev-client` is needed for the `development` profile (not on the original dependency list; asked the user).
+* `expo-dev-client` added (approved) for the `development` profile. `eslint` + `eslint-config-expo` kept (approved).
+* Photos have white backgrounds; the web hides them with mix-blend-multiply, which React Native lacks, so image frames are white and the tier colour shows as the chip.
+* Icons are inline SVGs drawn with expo-image (`src/components/Icon.tsx`), so no icon library is needed.
 
 ## Progress log
 Newest first.
+
+- 2026-10-04 · M2.2 to M2.4 (+ cart data layer) · Shop (tier pills, debounced search, sort chips, 2 column grid padded for odd counts, skeleton, empty with Clear filters, error with retry, pull to refresh), Product (gallery with dots, size radios with sold out struck through, stepper capped at min(stock,10), sticky buy bar, sign in sheet when signed out, dupe callouts, notes, meters, chips, related row, 404 state), Dupes (pair cards linking both sides). `src/cart/queries.ts`: server cart query `["cart"]`, optimistic `PUT /cart/items` in a serial mutation scope, add-to-cart adds to what is already there. Zod schemas for product, dupes and cart checked against the live API (catalog, product, dupes, me, cart PUT and GET all parse). Dev build started with expo-dev-client and the two Supabase vars set as EAS env vars (development + preview). Adaptive icon bottle scaled up 10% (594px tall, inside the 676px safe zone).
 
 - 2026-10-04 · M1.1 to M1.5 · Scaffolded with create-expo-app (SDK 57), linked EAS, removed the template demo. Deps via `expo install`: supabase-js, async-storage, react-query, zod, expo-crypto, Instrument fonts, sharp (dev). `expo lint` auto-installed eslint + eslint-config-expo (template lint prerequisites). Assets generated (icon 1024 opaque, adaptive foreground inside the 66% safe zone, splash logo 600x696 shown at 200 wide, transparent wordmark derived from the email logo). Test home screen shows catalog count, sign in, `/me`. tsc, lint and expo-doctor (21/21) pass.

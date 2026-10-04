@@ -59,3 +59,70 @@ export type Tier = z.infer<typeof tierSchema>
 export type Image = z.infer<typeof imageSchema>
 export type User = z.infer<typeof userSchema>
 export type ProductCard = z.infer<typeof productCardSchema>
+
+// ---- Product detail and dupes ----
+
+export const variantSchema = z.object({
+  id: z.string(),
+  label: z.string(),
+  sizeMl: z.number(),
+  priceKobo: z.number().int(),
+  stock: z.number().int(),
+})
+
+export const productDetailSchema = z.object({
+  card: productCardSchema,
+  description: z.string(),
+  topNotes: z.array(z.string()),
+  heartNotes: z.array(z.string()),
+  baseNotes: z.array(z.string()),
+  longevity: z.enum(['short', 'moderate', 'long', 'very_long']),
+  projection: z.enum(['soft', 'moderate', 'strong']),
+  variants: z.array(variantSchema),
+  images: z.array(imageSchema),
+  inspiredBy: productCardSchema.nullable(),
+  dupes: z.array(productCardSchema),
+  related: z.array(productCardSchema),
+})
+export const productResponseSchema = z.object({ product: productDetailSchema })
+
+export const dupePairSchema = z.object({
+  original: productCardSchema,
+  dupe: productCardSchema,
+  savingKobo: z.number().int(),
+  savingPercent: z.number(),
+})
+export const dupesResponseSchema = z.object({ dupes: z.array(dupePairSchema) })
+
+// ---- Cart ----
+
+export const cartLineSchema = z.object({
+  variantId: z.string(),
+  quantity: z.number().int(),
+  /** The server lowered this quantity while answering. */
+  changed: z.boolean(),
+  productSlug: z.string(),
+  productName: z.string(),
+  brand: z.string(),
+  tier: tierSchema,
+  variantLabel: z.string(),
+  sizeMl: z.number(),
+  priceKobo: z.number().int(),
+  stock: z.number().int(),
+  image: imageSchema.nullable(),
+})
+
+export const cartSchema = z.object({
+  lines: z.array(cartLineSchema),
+  itemCount: z.number().int(),
+  subtotalKobo: z.number().int(),
+  changed: z.boolean(),
+  messages: z.array(z.string()),
+})
+export const cartResponseSchema = z.object({ cart: cartSchema })
+
+export type Variant = z.infer<typeof variantSchema>
+export type ProductDetail = z.infer<typeof productDetailSchema>
+export type DupePair = z.infer<typeof dupePairSchema>
+export type CartLine = z.infer<typeof cartLineSchema>
+export type Cart = z.infer<typeof cartSchema>

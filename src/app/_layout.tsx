@@ -41,7 +41,10 @@ function Root() {
   return (
     <>
       <StatusBar style="dark" />
-      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.cream } }} />
+      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.cream } }}>
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="product/[slug]" />
+      </Stack>
     </>
   )
 }
