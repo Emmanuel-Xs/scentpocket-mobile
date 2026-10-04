@@ -8,7 +8,7 @@ import { useAddToCart } from '@/cart/queries'
 import { Button } from '@/components/Button'
 import { SignInSheet } from '@/components/SignInSheet'
 import { formatKobo } from '@/lib/money'
-import { colors, radius, shadow, space, type as t } from '@/theme'
+import { colors, PRESSED_SCALE, radius, shadow, space, type as t } from '@/theme'
 
 type Props = { product: ProductDetail; variant: Variant; qty: number }
 
@@ -49,16 +49,24 @@ export function BuyBar({ product, variant, qty }: Props) {
     <>
       <View style={[styles.bar, { paddingBottom: insets.bottom + space.md }]}>
         {added !== null ? (
-          <Pressable onPress={() => router.navigate('/cart')} accessibilityRole="button" style={styles.toast}>
-            <Text style={[t.smallStrong, { color: colors.cream }]}>
-              Added. {added} in your cart. View cart
-            </Text>
+          <Pressable
+            onPress={() => router.navigate('/cart')}
+            accessibilityRole="button"
+            style={({ pressed }) => [styles.toast, pressed && { opacity: 0.85, transform: [{ scale: PRESSED_SCALE }] }]}
+          >
+            <Text style={[t.smallStrong, { color: colors.cream }]}>Added. {added} in your cart. View cart</Text>
           </Pressable>
         ) : null}
-        {error ? <Text style={[t.small, { color: colors.danger }]} accessibilityRole="alert">{error}</Text> : null}
+        {error ? (
+          <Text style={[t.small, { color: colors.danger }]} accessibilityRole="alert">
+            {error}
+          </Text>
+        ) : null}
         <View style={styles.row}>
           <View>
-            <Text style={[t.caption, { color: colors.muted }]} numberOfLines={1}>{variant.sizeMl}ml × {qty}</Text>
+            <Text style={[t.caption, { color: colors.muted }]} numberOfLines={1}>
+              {variant.sizeMl}ml × {qty}
+            </Text>
             <Text style={t.h3}>{formatKobo(variant.priceKobo * qty)}</Text>
           </View>
           <Button
@@ -81,7 +89,15 @@ export function BuyBar({ product, variant, qty }: Props) {
 }
 
 const styles = StyleSheet.create({
-  bar: { backgroundColor: colors.cream, borderTopWidth: 1, borderTopColor: colors.border, paddingHorizontal: space.lg, paddingTop: space.md, gap: space.sm, ...shadow.md },
+  bar: {
+    backgroundColor: colors.cream,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    paddingHorizontal: space.lg,
+    paddingTop: space.md,
+    gap: space.sm,
+    ...shadow.md,
+  },
   row: { flexDirection: 'row', alignItems: 'center', gap: space.lg },
   toast: { backgroundColor: colors.ink, borderRadius: radius.pill, paddingVertical: space.md, alignItems: 'center' },
 })

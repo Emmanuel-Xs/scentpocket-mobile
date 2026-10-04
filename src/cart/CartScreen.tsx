@@ -104,7 +104,14 @@ export function CartScreen() {
     <View style={styles.screen}>
       <ScrollView
         contentContainerStyle={styles.pad}
-        refreshControl={<RefreshControl refreshing={cart.isRefetching && !saving} onRefresh={() => void cart.refetch()} tintColor={colors.ink} colors={[colors.ink]} />}
+        refreshControl={
+          <RefreshControl
+            refreshing={cart.isRefetching && !saving}
+            onRefresh={() => void cart.refetch()}
+            tintColor={colors.ink}
+            colors={[colors.ink]}
+          />
+        }
       >
         {header}
         <View style={styles.body}>
@@ -114,12 +121,21 @@ export function CartScreen() {
                 <Text style={t.smallStrong}>We updated your cart.</Text>
                 <Text style={t.small}>{notice}</Text>
               </View>
-              <Pressable onPress={() => setNotice(null)} accessibilityRole="button" accessibilityLabel="Dismiss" hitSlop={12}>
+              <Pressable
+                onPress={() => setNotice(null)}
+                accessibilityRole="button"
+                accessibilityLabel="Dismiss"
+                style={({ pressed }) => [styles.dismiss, pressed && { opacity: 0.5 }]}
+              >
                 <Text style={t.smallStrong}>Got it</Text>
               </Pressable>
             </View>
           ) : null}
-          {actionError ? <Text style={[t.small, { color: colors.danger }]} accessibilityRole="alert">{actionError}</Text> : null}
+          {actionError ? (
+            <Text style={[t.small, { color: colors.danger }]} accessibilityRole="alert">
+              {actionError}
+            </Text>
+          ) : null}
 
           {lines.length === 0 ? (
             <EmptyState
@@ -142,7 +158,9 @@ export function CartScreen() {
             <FreeDeliveryProgress subtotalKobo={subtotalKobo} thresholdKobo={delivery.data.freeDeliveryThresholdKobo} />
           ) : null}
           <View style={styles.subtotal}>
-            <Text style={t.body}>Subtotal ({itemCount} {itemCount === 1 ? 'item' : 'items'})</Text>
+            <Text style={t.body}>
+              Subtotal ({itemCount} {itemCount === 1 ? 'item' : 'items'})
+            </Text>
             <Text style={t.h3}>{formatKobo(subtotalKobo)}</Text>
           </View>
           <Text style={[t.small, { color: colors.muted }]}>Delivery and total are worked out at checkout.</Text>
@@ -154,9 +172,23 @@ export function CartScreen() {
 }
 
 const styles = StyleSheet.create({
+  dismiss: { minHeight: TOUCH, paddingHorizontal: space.sm, justifyContent: 'center' },
   // Same row padding, divider and photo frame as CartLineRow.
-  skRow: { flexDirection: 'row', gap: space.md, paddingVertical: space.lg, borderBottomWidth: 1, borderBottomColor: colors.border },
-  skPhoto: { width: 84, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, overflow: 'hidden', alignSelf: 'flex-start' },
+  skRow: {
+    flexDirection: 'row',
+    gap: space.md,
+    paddingVertical: space.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  skPhoto: {
+    width: 84,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    overflow: 'hidden',
+    alignSelf: 'flex-start',
+  },
   screen: { flex: 1, backgroundColor: colors.cream },
   pad: { paddingBottom: space.xl },
   head: { paddingHorizontal: space.lg, paddingBottom: space.sm },
@@ -171,6 +203,13 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(155, 44, 44, 0.25)',
     backgroundColor: 'rgba(155, 44, 44, 0.06)',
   },
-  footer: { padding: space.lg, gap: space.md, backgroundColor: colors.cream, borderTopWidth: 1, borderTopColor: colors.border, ...shadow.md },
+  footer: {
+    padding: space.lg,
+    gap: space.md,
+    backgroundColor: colors.cream,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    ...shadow.md,
+  },
   subtotal: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' },
 })

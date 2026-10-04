@@ -25,17 +25,33 @@ export function StatePicker({ states, value, onChange, error }: Props) {
         accessibilityRole="button"
         accessibilityLabel={`State, ${value || 'not chosen'}`}
         onPress={() => setOpen(true)}
-        style={({ pressed }) => [styles.box, !!error && styles.errorBox, pressed && { transform: [{ scale: PRESSED_SCALE }] }]}
+        style={({ pressed }) => [
+          styles.box,
+          !!error && styles.errorBox,
+          pressed && { transform: [{ scale: PRESSED_SCALE }] },
+        ]}
       >
         <Text style={[t.body, { color: value ? colors.ink : colors.disabled }]}>{value || 'Choose a state'}</Text>
       </Pressable>
-      {error ? <Text style={[t.small, { color: colors.danger }]} accessibilityRole="alert">{error}</Text> : null}
+      {error ? (
+        <Text style={[t.small, { color: colors.danger }]} accessibilityRole="alert">
+          {error}
+        </Text>
+      ) : null}
 
       <Modal visible={open} animationType="slide" onRequestClose={close}>
         <View style={[styles.sheet, { paddingTop: insets.top + space.md, paddingBottom: insets.bottom }]}>
           <View style={styles.head}>
             <Text style={t.h2}>Choose a state</Text>
-            <Pressable onPress={close} accessibilityRole="button" accessibilityLabel="Close" style={styles.close}>
+            <Pressable
+              onPress={close}
+              accessibilityRole="button"
+              accessibilityLabel="Close"
+              style={({ pressed }) => [
+                styles.close,
+                pressed && { backgroundColor: colors.blush, borderRadius: radius.pill },
+              ]}
+            >
               <Icon name="x" size={24} />
             </Pressable>
           </View>
@@ -55,7 +71,9 @@ export function StatePicker({ states, value, onChange, error }: Props) {
             data={shown}
             keyExtractor={(s) => s}
             keyboardShouldPersistTaps="handled"
-            ListEmptyComponent={<Text style={[t.body, { color: colors.muted, padding: space.lg }]}>No state matches that.</Text>}
+            ListEmptyComponent={
+              <Text style={[t.body, { color: colors.muted, padding: space.lg }]}>No state matches that.</Text>
+            }
             renderItem={({ item }) => (
               <Pressable
                 accessibilityRole="radio"
@@ -88,7 +106,13 @@ const styles = StyleSheet.create({
   },
   errorBox: { borderColor: colors.danger, borderWidth: 1.5 },
   sheet: { flex: 1, backgroundColor: colors.cream },
-  head: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: space.lg, paddingBottom: space.md },
+  head: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: space.lg,
+    paddingBottom: space.md,
+  },
   close: { width: TOUCH, height: TOUCH, alignItems: 'center', justifyContent: 'center' },
   search: {
     flexDirection: 'row',
@@ -103,5 +127,11 @@ const styles = StyleSheet.create({
     borderColor: colors.borderStrong,
     backgroundColor: colors.surface,
   },
-  row: { minHeight: TOUCH, justifyContent: 'center', paddingHorizontal: space.lg, borderBottomWidth: 1, borderBottomColor: colors.border },
+  row: {
+    minHeight: TOUCH,
+    justifyContent: 'center',
+    paddingHorizontal: space.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
 })

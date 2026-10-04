@@ -20,7 +20,11 @@ export function SignInSheet({ visible, onClose, title, body }: Props) {
       <Pressable style={styles.backdrop} onPress={onClose} accessibilityLabel="Close" accessibilityRole="button" />
       <View style={[styles.sheet, { paddingBottom: insets.bottom + space.lg }]}>
         <SignInPrompt title={title} body={body} />
-        <Pressable onPress={onClose} accessibilityRole="button" style={styles.close}>
+        <Pressable
+          onPress={onClose}
+          accessibilityRole="button"
+          style={({ pressed }) => [styles.close, pressed && { opacity: 0.5 }]}
+        >
           <Text style={[t.bodyStrong, { color: colors.muted }]}>Not now</Text>
         </Pressable>
       </View>
@@ -30,6 +34,12 @@ export function SignInSheet({ visible, onClose, title, body }: Props) {
 
 const styles = StyleSheet.create({
   backdrop: { flex: 1, backgroundColor: colors.overlay },
-  sheet: { backgroundColor: colors.cream, padding: space.lg, gap: space.sm, borderTopLeftRadius: radius.xl, borderTopRightRadius: radius.xl },
+  sheet: {
+    backgroundColor: colors.cream,
+    padding: space.lg,
+    gap: space.sm,
+    borderTopLeftRadius: radius.xl,
+    borderTopRightRadius: radius.xl,
+  },
   close: { minHeight: 48, alignItems: 'center', justifyContent: 'center' },
 })

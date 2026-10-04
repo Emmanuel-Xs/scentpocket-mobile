@@ -29,12 +29,12 @@ Status legend: [ ] not started · [x] done
 - [x] M2.4 Dupes: pair cards linking both products
 - [x] M2.5 Cart: server cart only, optimistic `setCartItem`, refetch on app focus, poll 3s while the Cart tab is focused, free delivery progress, subtotal
 - [x] M2.6 Checkout: contact (email from /me, +234 phone), zones, pay on delivery, Idempotency-Key, 409 handling (show `details.short`, refetch the cart)
-- [~] M2.7 Orders list and order detail with status timeline. Order detail + timeline done (checkout lands on it); the Orders tab list is still a placeholder
-- [ ] M2.8 Loading, empty, error-with-retry on every screen; pressed feedback everywhere
+- [x] M2.7 Orders list and order detail with status timeline (list rendered and checked with mocked responses; real orders only exercised through checkout)
+- [x] M2.8 Loading, empty, error-with-retry on every screen; pressed feedback everywhere (audited every Pressable; skeletons mirror the real layouts). Not yet checked on a phone
 
 ## Phase M3: release
 - [ ] M3.1 Preview APK built, expo.dev install link
-- [ ] M3.2 README (what it is, stack, how sync works, how to run, APK link)
+- [~] M3.2 README written; the APK link is added when the final preview build finishes
 - [ ] M3.3 GitHub repo `Emmanuel-Xs/scentpocket-mobile` created and pushed
 
 ## Parked / open
@@ -45,6 +45,8 @@ Status legend: [ ] not started · [x] done
 
 ## Progress log
 Newest first.
+
+- 2026-10-04 · M2.7 + M2.8 + README · Orders tab: profile card plus the orders list (first photo, ref, date, item count, total, status badge; skeleton, empty, error with retry, pull to refresh, refetch when the tab comes to the front). Pressed feedback added to the last four pressables (cart notice, added toast, state picker close, sign in sheet). Rendered the orders list and the cancelled and delivered timelines in a browser with mocked API responses (no production orders created). README.md written. Remaining: confirm sign in on the preview APK, final preview build, GitHub repo.
 
 - 2026-10-04 · sign in failed on the phone (screen recording) · Two dev client problems: (1) after choosing the Google account Android killed the app, and the dev client then showed its "Development servers" launcher, which loses the callback link; (2) on another try the browser ended on scentpocket.com.ng, because `Linking.createURL()` in a dev client does not return the plain `scentpocket://auth/callback` that is in the Supabase allow-list, so Supabase used the web Site URL. Fix: fixed redirect `Linking.createURL('auth/callback', { scheme: 'scentpocket' })`; a `Linking` url listener + `getInitialURL` finishes sign in even when the router does not mount the callback route (all paths share one exchange per code); the browser session ending early now says "Sign in did not finish"; dev builds show a short sign in trail under the Google button (never the code or tokens). Test sign in with the preview APK (no dev launcher, bundled JS), not the dev client.
 
