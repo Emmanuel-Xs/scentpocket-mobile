@@ -23,11 +23,11 @@ Status legend: [ ] not started · [x] done
 - [ ] M1.7 User tested sign in on the phone
 
 ## Phase M2: screens
-- [~] M2.1 Tabs (Shop, Dupes, Cart with badge, Orders with profile card); signed out prompts on Cart and Orders. Tabs, badge, prompts and profile card done; Cart and Orders bodies are placeholders until M2.5 and M2.7
+- [~] M2.1 Tabs (Shop, Dupes, Cart with badge, Orders with profile card); signed out prompts on Cart and Orders. Done except the Orders body (placeholder until M2.7)
 - [x] M2.2 Shop: tier pills, search, 2-column grid, pull to refresh
 - [x] M2.3 Product: gallery, size radios (sold out struck), stepper capped at stock, add to cart (sign in required), dupe callout
 - [x] M2.4 Dupes: pair cards linking both products
-- [ ] M2.5 Cart: server cart only, optimistic `setCartItem`, refetch on app focus, poll 3s while the Cart tab is focused, free delivery progress, subtotal
+- [x] M2.5 Cart: server cart only, optimistic `setCartItem`, refetch on app focus, poll 3s while the Cart tab is focused, free delivery progress, subtotal
 - [ ] M2.6 Checkout: contact (email from /me, +234 phone), zones, pay on delivery, Idempotency-Key, 409 handling (show `details.short`, refetch the cart)
 - [ ] M2.7 Orders list and order detail with status timeline
 - [ ] M2.8 Loading, empty, error-with-retry on every screen; pressed feedback everywhere
@@ -45,6 +45,8 @@ Status legend: [ ] not started · [x] done
 
 ## Progress log
 Newest first.
+
+- 2026-10-04 · M2.5 · Cart tab: server cart only (`["cart"]`), signed out prompt, skeleton, empty state, error with retry, pull to refresh, lines with stepper (stops at min(stock,10)) and Remove (quantity 0), optimistic serial saves with rollback and an error line, server `messages` shown in a dismissible notice, free delivery progress (threshold from GET /delivery-zones), subtotal, Checkout. Polls every 3s while the tab is focused and no save is running; refetches when the app returns to the foreground (AppState focusManager). `/checkout` is a placeholder until M2.6. User added EXPO_TOKEN to .zshrc (verified it authenticates). Typecheck and lint pass, bundle compiles; not yet tried on a device.
 
 - 2026-10-04 · M2.2 to M2.4 (+ cart data layer) · Shop (tier pills, debounced search, sort chips, 2 column grid padded for odd counts, skeleton, empty with Clear filters, error with retry, pull to refresh), Product (gallery with dots, size radios with sold out struck through, stepper capped at min(stock,10), sticky buy bar, sign in sheet when signed out, dupe callouts, notes, meters, chips, related row, 404 state), Dupes (pair cards linking both sides). `src/cart/queries.ts`: server cart query `["cart"]`, optimistic `PUT /cart/items` in a serial mutation scope, add-to-cart adds to what is already there. Zod schemas for product, dupes and cart checked against the live API (catalog, product, dupes, me, cart PUT and GET all parse). Dev build started with expo-dev-client and the two Supabase vars set as EAS env vars (development + preview). Adaptive icon bottle scaled up 10% (594px tall, inside the 676px safe zone).
 

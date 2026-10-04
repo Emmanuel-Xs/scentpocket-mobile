@@ -126,3 +126,24 @@ export type ProductDetail = z.infer<typeof productDetailSchema>
 export type DupePair = z.infer<typeof dupePairSchema>
 export type CartLine = z.infer<typeof cartLineSchema>
 export type Cart = z.infer<typeof cartSchema>
+
+// ---- Delivery zones (static store rules) ----
+
+export const deliveryZoneIdSchema = z.enum(['lagos_mainland', 'lagos_island', 'outside_lagos'])
+
+export const deliveryZonesResponseSchema = z.object({
+  zones: z.array(
+    z.object({
+      id: deliveryZoneIdSchema,
+      label: z.string(),
+      feeKobo: z.number().int(),
+      eta: z.string(),
+    }),
+  ),
+  freeDeliveryThresholdKobo: z.number().int(),
+  maxQuantityPerLine: z.number().int(),
+  states: z.array(z.string()),
+})
+
+export type DeliveryZoneId = z.infer<typeof deliveryZoneIdSchema>
+export type DeliveryZones = z.infer<typeof deliveryZonesResponseSchema>

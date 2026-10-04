@@ -20,7 +20,7 @@ export function useCart() {
   return useQuery({ ...cartQuery(), enabled: status === 'signedIn' })
 }
 
-const MUTATION_KEY = ['setCartItem'] as const
+export const MUTATION_KEY = ['setCartItem'] as const
 
 /**
  * Sets one line to an absolute quantity (0 removes it). Optimistic, rolled back on error. Saves

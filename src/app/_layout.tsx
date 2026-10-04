@@ -44,6 +44,7 @@ function Root() {
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.cream } }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="product/[slug]" />
+        <Stack.Screen name="checkout" />
       </Stack>
     </>
   )
