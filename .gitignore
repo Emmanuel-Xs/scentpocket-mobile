@@ -44,3 +44,4 @@ example
 
 # local env (public values, but keep them out of git; EAS has its own)
 .env
+.playwright-mcp/

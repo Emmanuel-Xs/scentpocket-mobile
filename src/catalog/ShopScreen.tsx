@@ -6,8 +6,7 @@ import type { ProductCard as Card, Tier } from '@/api/schemas'
 import { EmptyState, ErrorState } from '@/components/States'
 import { Icon } from '@/components/Icon'
 import { Pill } from '@/components/Pill'
-import { ProductCard } from '@/components/ProductCard'
-import { Skeleton } from '@/components/Skeleton'
+import { ProductCard, ProductCardSkeleton, SkeletonLine } from '@/components/ProductCard'
 import { Wordmark } from '@/components/Wordmark'
 import { useDebounced } from '@/lib/use-debounced'
 import { colors, radius, space, TOUCH, tiers, type as t } from '@/theme'
@@ -108,15 +107,15 @@ export function ShopScreen() {
   )
 }
 
+/** Mirrors the loaded list: the same padding, the "N scents" line, 2 columns and gaps. */
 function ShopSkeleton() {
   return (
-    <View style={[styles.list, styles.skeletonGrid]} accessibilityLabel="Loading scents" accessibilityRole="progressbar">
-      {Array.from({ length: 6 }, (_, i) => (
-        <View key={i} style={{ width: '48%', gap: space.sm }}>
-          <Skeleton style={{ aspectRatio: 4 / 5, borderRadius: radius.lg }} />
-          <Skeleton style={{ height: 12, width: '40%' }} />
-          <Skeleton style={{ height: 22, width: '80%' }} />
-          <Skeleton style={{ height: 16, width: '35%' }} />
+    <View style={[styles.list, { paddingBottom: space.xxl }]} accessibilityLabel="Loading scents" accessibilityRole="progressbar">
+      <SkeletonLine lineHeight={t.small.lineHeight} width={64} />
+      {[0, 1, 2].map((row) => (
+        <View key={row} style={styles.columns}>
+          <ProductCardSkeleton />
+          <ProductCardSkeleton />
         </View>
       ))}
     </View>
@@ -140,6 +139,5 @@ const styles = StyleSheet.create({
   input: { flex: 1, color: colors.ink, paddingVertical: 0 },
   row: { gap: space.sm },
   list: { paddingHorizontal: space.lg, gap: space.lg },
-  columns: { gap: space.md },
-  skeletonGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', rowGap: space.xl },
+  columns: { flexDirection: 'row', gap: space.md },
 })

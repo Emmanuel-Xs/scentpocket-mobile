@@ -5,15 +5,12 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import type { ReactNode } from 'react'
 import { queryClient } from '@/lib/query'
 import { supabase } from '@/lib/supabase'
-import { meQuery } from './queries'
+import { completeSignIn } from './complete'
+import type { SignInResult } from './complete'
 
 WebBrowser.maybeCompleteAuthSession()
 
 export type AuthStatus = 'loading' | 'signedOut' | 'signedIn'
-export type SignInResult =
-  | { ok: true }
-  | { ok: false; reason: 'cancelled' | 'error'; message: string }
-
 type AuthContextValue = {
   status: AuthStatus
   session: Session | null
@@ -59,17 +56,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       const { queryParams } = Linking.parse(result.url)
-      const failure = queryParam(queryParams, 'error_description') ?? queryParam(queryParams, 'error')
-      if (failure) return { ok: false, reason: 'error', message: failure }
-      const code = queryParam(queryParams, 'code')
-      if (!code) return { ok: false, reason: 'error', message: 'Google did not send us back a code.' }
-
-      const exchanged = await supabase.auth.exchangeCodeForSession(code)
-      if (exchanged.error) return { ok: false, reason: 'error', message: exchanged.error.message }
-
-      // The server creates the profile on the first signed in request, so ask for /me right away.
-      await queryClient.fetchQuery(meQuery())
-      return { ok: true }
+      return await completeSignIn({
+        code: queryParam(queryParams, 'code'),
+        error: queryParam(queryParams, 'error_description') ?? queryParam(queryParams, 'error'),
+      })
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Something went wrong.'
       return { ok: false, reason: 'error', message }

@@ -20,6 +20,8 @@ export function ProductImage({ image, aspectRatio = 4 / 5, style }: Props) {
         <Image
           source={{ uri: image.src }}
           placeholder={{ uri: image.blurDataUrl }}
+          // The blur is a 16px image: stretch it over the frame instead of showing it tiny.
+          placeholderContentFit="cover"
           contentFit="contain"
           transition={200}
           accessibilityLabel={image.alt}

@@ -6,11 +6,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAuth } from '@/auth/AuthProvider'
 import { Button } from '@/components/Button'
 import { SignInPrompt } from '@/components/SignInPrompt'
+import { SkeletonLine } from '@/components/ProductCard'
 import { Skeleton } from '@/components/Skeleton'
 import { EmptyState, ErrorState } from '@/components/States'
 import { deliveryZonesQuery } from '@/checkout/queries'
 import { formatKobo } from '@/lib/money'
-import { colors, radius, shadow, space, type as t } from '@/theme'
+import { colors, radius, shadow, space, TOUCH, type as t } from '@/theme'
 import { CartLineRow } from './CartLineRow'
 import { FreeDeliveryProgress } from './FreeDeliveryProgress'
 import { cartQuery, MUTATION_KEY, useSetCartItem } from './queries'
@@ -65,12 +66,15 @@ export function CartScreen() {
         {header}
         <View style={styles.body} accessibilityLabel="Loading your cart" accessibilityRole="progressbar">
           {[0, 1].map((i) => (
-            <View key={i} style={{ flexDirection: 'row', gap: space.md }}>
-              <Skeleton style={{ width: 84, height: 105 }} />
+            <View key={i} style={styles.skRow}>
+              <View style={styles.skPhoto}>
+                <Skeleton style={{ aspectRatio: 4 / 5, borderRadius: 0 }} />
+              </View>
               <View style={{ flex: 1, gap: space.sm }}>
-                <Skeleton style={{ height: 12, width: '35%' }} />
-                <Skeleton style={{ height: 22, width: '70%' }} />
-                <Skeleton style={{ height: 44, width: 130, borderRadius: radius.pill }} />
+                <SkeletonLine lineHeight={t.eyebrow.lineHeight} width="35%" />
+                <SkeletonLine lineHeight={t.h3.lineHeight} width="75%" />
+                <SkeletonLine lineHeight={t.small.lineHeight} width="20%" />
+                <Skeleton style={{ height: TOUCH, width: 140, borderRadius: radius.pill }} />
               </View>
             </View>
           ))}
@@ -150,6 +154,9 @@ export function CartScreen() {
 }
 
 const styles = StyleSheet.create({
+  // Same row padding, divider and photo frame as CartLineRow.
+  skRow: { flexDirection: 'row', gap: space.md, paddingVertical: space.lg, borderBottomWidth: 1, borderBottomColor: colors.border },
+  skPhoto: { width: 84, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, overflow: 'hidden', alignSelf: 'flex-start' },
   screen: { flex: 1, backgroundColor: colors.cream },
   pad: { paddingBottom: space.xl },
   head: { paddingHorizontal: space.lg, paddingBottom: space.sm },
