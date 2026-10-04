@@ -56,6 +56,7 @@ export function ShopScreen() {
             placeholderTextColor={colors.disabled}
             accessibilityLabel="Search scents"
             returnKeyType="search"
+            maxLength={80}
             autoCorrect={false}
             style={[t.body, styles.input]}
           />

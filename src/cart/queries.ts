@@ -58,7 +58,8 @@ export function useAddToCart() {
   const qc = useQueryClient()
   const set = useSetCartItem()
   return async (variantId: string, qty: number, stock: number) => {
-    const cart = await qc.ensureQueryData(cartQuery())
+    // Always the server's current cart, never a cached one: the website may have changed it.
+    const cart = await qc.fetchQuery({ ...cartQuery(), staleTime: 0 })
     const current = cart.lines.find((l) => l.variantId === variantId)?.quantity ?? 0
     const quantity = Math.min(current + qty, maxQty(stock))
     await set.mutateAsync({ variantId, quantity })

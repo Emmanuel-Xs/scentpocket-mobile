@@ -30,10 +30,16 @@ async function accessToken(): Promise<string | null> {
   return data.session?.access_token ?? null
 }
 
+/** A request that has not answered by now is treated as a network failure (retrying an order is safe: Idempotency-Key). */
+const TIMEOUT_MS = 25_000
+
 async function send(path: string, opts: Options, token: string | null) {
   const hasBody = opts.body !== undefined
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS)
   try {
     return await fetch(`${env.apiUrl}${path}`, {
+      signal: controller.signal,
       method: opts.method ?? 'GET',
       headers: {
         Accept: 'application/json',
@@ -45,6 +51,8 @@ async function send(path: string, opts: Options, token: string | null) {
     })
   } catch {
     throw new ApiError(0, 'network', "Can't reach Scentpocket. Check your connection.")
+  } finally {
+    clearTimeout(timer)
   }
 }
 
