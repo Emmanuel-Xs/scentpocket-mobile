@@ -1,5 +1,11 @@
 # Scentpocket Mobile
 
+## Download
+
+**Android APK (v1.0.0):** https://github.com/Emmanuel-Xs/scentpocket-mobile/releases/download/v1.0.0/scentpocket.apk
+
+All releases: https://github.com/Emmanuel-Xs/scentpocket-mobile/releases
+
 The Android app for **Scentpocket**, a demo Lagos fragrance shop ("a scent for every pocket"): four budget tiers, real perfumes and prices, dupes that link cheap scents to expensive ones, Google sign in, a cart shared with the website, checkout with delivery zones and pay on delivery, and order history.
 
 It is a thin client over the live backend, the Scentpocket web app:
@@ -12,7 +18,7 @@ It is a thin client over the live backend, the Scentpocket web app:
 
 ## Install (Android)
 
-**Preview APK:** https://expo.dev/artifacts/eas/wOoHoY1Q0d8q-cizpM4edt1COi6yf18LP1t4aOT11dY.apk
+**Preview APK (older, all CPU types):** https://expo.dev/artifacts/eas/wOoHoY1Q0d8q-cizpM4edt1COi6yf18LP1t4aOT11dY.apk
 
 Install page with a QR code: https://expo.dev/accounts/n99plusones-team/projects/scentpocket-mobile/builds/c3a564ae-0bd3-4510-9694-3b0f629a3934
 
