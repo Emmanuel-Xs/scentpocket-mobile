@@ -1,5 +1,9 @@
 # Scentpocket Mobile
 
+## Demo
+
+A short video of web sign in plus web-to-mobile and mobile-to-web cart sync on a physical Android phone: [docs/scentpocket-demo.mp4](./docs/scentpocket-demo.mp4) or [the release download](https://github.com/Emmanuel-Xs/scentpocket-mobile/releases/download/v1.0.0/scentpocket-demo.mp4).
+
 ## Download
 
 **Android APK (v1.0.0):** https://github.com/Emmanuel-Xs/scentpocket-mobile/releases/download/v1.0.0/scentpocket.apk
